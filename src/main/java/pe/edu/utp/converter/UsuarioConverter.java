@@ -11,31 +11,39 @@ public class UsuarioConverter extends AbstractConverter<Usuario, UsuarioResponse
 
   @Override
   public UsuarioResponseDto fromEntity(Usuario entity) {
-    if (entity == null) return null;
-
-    return UsuarioResponseDto.builder()
-        .id(entity.getId())
-        .email(entity.getEmail())
-        .activo(entity.isActivo())
-        .rol(entity.getRol().name())
-        .build();
+    if (entity == null) {
+      return null;
+    } else {
+      return UsuarioResponseDto.builder()
+          .id(entity.getId())
+          .email(entity.getEmail())
+          .activo(entity.isActivo())
+          .rol(entity.getRol().name())
+          .build();
+    }
   }
 
   @Override
   public Usuario fromDTO(UsuarioResponseDto dto) {
-    if (dto == null) return null;
-    Rol rol = Rol.valueOf(dto.getRol().toUpperCase());
-    return Usuario.builder()
-        .id(dto.getId())
-        .email(dto.getEmail())
-        .activo(dto.isActivo())
-        .rol(rol)
-        .build();
+    if (dto == null) {
+      return null;
+    } else {
+      Rol rol = Rol.valueOf(dto.getRol().toUpperCase());
+      return Usuario.builder()
+          .id(dto.getId())
+          .email(dto.getEmail())
+          .activo(dto.isActivo())
+          .rol(rol)
+          .build();
+    }
   }
 
   public Usuario registro(UsuarioRequestDto dto) {
-    if (dto == null) return null;
-    Rol rol = Rol.valueOf(dto.getRol().toUpperCase());
-    return Usuario.builder().email(dto.getEmail()).password(dto.getPassword()).rol(rol).build();
+    if (dto == null) {
+      return null;
+    } else {
+      Rol rol = Rol.valueOf(dto.getRol().toUpperCase());
+      return Usuario.builder().email(dto.getEmail()).password(dto.getPassword()).rol(rol).build();
+    }
   }
 }

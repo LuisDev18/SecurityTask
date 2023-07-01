@@ -37,9 +37,9 @@ public class UsuarioController {
     } else {
       registros = usuarioService.findByEmail(email, pagina);
     }
-    List<UsuarioResponseDto> registrosDTO = converter.fromEntity(registros);
+    List<UsuarioResponseDto> registrosDto = converter.fromEntity(registros);
 
-    return new WrapperResponse(true, "success", registrosDTO).createResponse(HttpStatus.OK);
+    return new WrapperResponse(true, "success", registrosDto).createResponse(HttpStatus.OK);
   }
 
   @PostMapping()

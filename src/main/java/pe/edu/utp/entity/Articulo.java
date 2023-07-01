@@ -41,7 +41,7 @@ public class Articulo {
   @Column(name = "create_at", nullable = false, updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate
-  private Date createdAT;
+  private Date createdAt;
 
   @Column(name = "update_at")
   @Temporal(TemporalType.TIMESTAMP)

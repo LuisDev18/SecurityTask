@@ -57,8 +57,8 @@ public class ArticuloController {
     if (articulos.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
-    List<ArticuloDto> articulosDTO = articuloConverter.fromEntity(articulos);
-    return ResponseEntity.ok(articulosDTO);
+    List<ArticuloDto> articulosDto = articuloConverter.fromEntity(articulos);
+    return ResponseEntity.ok(articulosDto);
   }
 
   @GetMapping(value = "/{id}")
@@ -68,26 +68,26 @@ public class ArticuloController {
     if (articulo == null) {
       return ResponseEntity.notFound().build();
     }
-    ArticuloDto articuloDTO = articuloConverter.fromEntity(articulo);
-    return ResponseEntity.ok(articuloDTO);
+    ArticuloDto articuloDto = articuloConverter.fromEntity(articulo);
+    return ResponseEntity.ok(articuloDto);
   }
 
   @PostMapping
   public ResponseEntity<ArticuloDto> create(@Valid @RequestBody ArticuloDto articulo) {
     Articulo registro = articuloService.save(articuloConverter.fromDTO(articulo));
-    ArticuloDto registroDTO = articuloConverter.fromEntity(registro);
-    return ResponseEntity.status(HttpStatus.CREATED).body(registroDTO);
+    ArticuloDto registroDto = articuloConverter.fromEntity(registro);
+    return ResponseEntity.status(HttpStatus.CREATED).body(registroDto);
   }
 
   @PutMapping(value = "/{id}")
   public ResponseEntity<ArticuloDto> update(
-      @PathVariable("id") int id, @Valid @RequestBody ArticuloDto articuloDTO) {
-    Articulo articuloUpdate = articuloService.update(articuloConverter.fromDTO(articuloDTO));
+      @PathVariable("id") int id, @Valid @RequestBody ArticuloDto articuloDto) {
+    Articulo articuloUpdate = articuloService.update(articuloConverter.fromDTO(articuloDto));
     if (articuloUpdate == null) {
       return ResponseEntity.notFound().build();
     }
-    ArticuloDto articuloUpdateDTO = articuloConverter.fromEntity(articuloUpdate);
-    return ResponseEntity.ok(articuloUpdateDTO);
+    ArticuloDto articuloUpdateDto = articuloConverter.fromEntity(articuloUpdate);
+    return ResponseEntity.ok(articuloUpdateDto);
   }
 
   @DeleteMapping(value = "/{id}")
