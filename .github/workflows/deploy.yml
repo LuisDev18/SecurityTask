@@ -1,46 +1,50 @@
-name: Deploy to Azure
+name: Build and deploy to Azure
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+     branches:
+       - master
+  pull_request_target:
+     branches:
+       - master
+     types:
+       - closed
 
 jobs:
-  checkstyle:
-    name: Check code style
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dbelyaev/action-checkstyle@v0.7.4
-        with:
-          github_token: ${{ secrets.API_JOBS }}
-          reporter: github-pr-check
-          level: error
-          checkstyle_config: .github/workflows/custom_checks.xml
-
-  deploy_dependencies:
-    name: Deploy Dependencies
-    runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Build
+        run: ./gradlew build
+
+
   deploy:
-    needs: [checkstyle, deploy_dependencies]
-    runs-on: windows-latest
+    needs: build
+    runs-on: ubuntu-latest
+    
     steps:
-      - name: Build and deploy to Azure
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Deploy to Azure
         uses: Azure/webapps-deploy@v2
         with:
-          app-name: ApiRestArticle
+          app-name: apirestproducts
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
-
