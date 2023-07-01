@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-
+          distribution: 'adopt'
       - name: Build and deploy to Azure
         uses: Azure/webapps-deploy@v2
         with:
