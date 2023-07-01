@@ -15,32 +15,28 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(
-        prePostEnabled = false, securedEnabled = false, jsr250Enabled = true
-)
+@EnableMethodSecurity(prePostEnabled = false, securedEnabled = false, jsr250Enabled = true)
 public class SecurityConfiguration {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf()
-                .disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/v1/usuarios","/v1/usuarios/login")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
-
+    http.csrf()
+        .disable()
+        .authorizeHttpRequests()
+        .requestMatchers("/v1/usuarios", "/v1/usuarios/login")
+        .permitAll()
+        .anyRequest()
+        .authenticated()
+        .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
 }
