@@ -10,6 +10,7 @@ on:
 
 jobs:
   deploy:
+    needs: checkstyle
     runs-on: windows-latest
     
     steps:
