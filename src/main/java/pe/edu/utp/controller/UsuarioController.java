@@ -28,7 +28,7 @@ public class UsuarioController {
   public ResponseEntity<List<UsuarioResponseDto>> findAll(
       @RequestParam(value = "email", required = false) String email,
       @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
-      @RequestParam(value = "limit", required = false, defaultValue = "5") int pageSize) {
+      @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
 
     Pageable pagina = PageRequest.of(pageNumber, pageSize);
     List<Usuario> registros;
