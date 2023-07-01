@@ -9,22 +9,38 @@ on:
       - master
 
 jobs:
-  deploy:
-    needs: checkstyle
-    runs-on: windows-latest
-    
+  checkstyle:
+    name: Check code style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dbelyaev/action-checkstyle@v0.7.4
+        with:
+          github_token: ${{ secrets.API_JOBS }}
+          reporter: github-pr-check
+          level: error
+          checkstyle_config: .github/workflows/custom_checks.xml
+
+  deploy_dependencies:
+    name: Deploy Dependencies
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
+
+  deploy:
+    needs: [checkstyle, deploy_dependencies]
+    runs-on: windows-latest
+    steps:
       - name: Build and deploy to Azure
         uses: Azure/webapps-deploy@v2
         with:
           app-name: ApiRestArticle
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
+
