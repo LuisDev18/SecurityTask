@@ -24,7 +24,7 @@ public class UsuarioConverter extends AbstractConverter<Usuario, UsuarioResponse
   }
 
   @Override
-  public Usuario fromDTO(UsuarioResponseDto dto) {
+  public Usuario fromDto(UsuarioResponseDto dto) {
     if (dto == null) {
       return null;
     } else {

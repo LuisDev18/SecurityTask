@@ -10,21 +10,27 @@ public class ArticuloConverter extends AbstractConverter<Articulo, ArticuloDto> 
   @Override
   public ArticuloDto fromEntity(Articulo entity) {
 
-    if (entity == null) return null;
-    return ArticuloDto.builder()
-        .id(entity.getId())
-        .nombre(entity.getNombre())
-        .precio(entity.getPrecio())
-        .build();
+    if (entity == null) {
+      return null;
+    } else {
+      return ArticuloDto.builder()
+          .id(entity.getId())
+          .nombre(entity.getNombre())
+          .precio(entity.getPrecio())
+          .build();
+    }
   }
 
   @Override
-  public Articulo fromDTO(ArticuloDto dto) {
-    if (dto == null) return null;
-    return Articulo.builder()
-        .id(dto.getId())
-        .nombre(dto.getNombre())
-        .precio(dto.getPrecio())
-        .build();
+  public Articulo fromDto(ArticuloDto dto) {
+    if (dto == null) {
+      return null;
+    } else {
+      return Articulo.builder()
+          .id(dto.getId())
+          .nombre(dto.getNombre())
+          .precio(dto.getPrecio())
+          .build();
+    }
   }
 }

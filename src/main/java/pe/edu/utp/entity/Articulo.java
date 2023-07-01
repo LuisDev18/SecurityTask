@@ -46,5 +46,5 @@ public class Articulo {
   @Column(name = "update_at")
   @Temporal(TemporalType.TIMESTAMP)
   @LastModifiedDate
-  private Date updateAT;
+  private Date updateAt;
 }

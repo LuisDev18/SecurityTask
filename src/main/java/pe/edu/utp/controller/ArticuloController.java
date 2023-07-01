@@ -74,7 +74,7 @@ public class ArticuloController {
 
   @PostMapping
   public ResponseEntity<ArticuloDto> create(@Valid @RequestBody ArticuloDto articulo) {
-    Articulo registro = articuloService.save(articuloConverter.fromDTO(articulo));
+    Articulo registro = articuloService.save(articuloConverter.fromDto(articulo));
     ArticuloDto registroDto = articuloConverter.fromEntity(registro);
     return ResponseEntity.status(HttpStatus.CREATED).body(registroDto);
   }
@@ -82,7 +82,7 @@ public class ArticuloController {
   @PutMapping(value = "/{id}")
   public ResponseEntity<ArticuloDto> update(
       @PathVariable("id") int id, @Valid @RequestBody ArticuloDto articuloDto) {
-    Articulo articuloUpdate = articuloService.update(articuloConverter.fromDTO(articuloDto));
+    Articulo articuloUpdate = articuloService.update(articuloConverter.fromDto(articuloDto));
     if (articuloUpdate == null) {
       return ResponseEntity.notFound().build();
     }
