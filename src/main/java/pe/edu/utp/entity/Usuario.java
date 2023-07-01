@@ -1,17 +1,29 @@
 package pe.edu.utp.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
 
 @Entity
-@Table(name="usuarios")
+@Table(name = "usuarios")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -19,53 +31,50 @@ import java.util.List;
 @Builder
 public class Usuario implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
+  private String email;
 
-    private String email;
+  private String password;
 
+  @Column(name = "activo", nullable = false)
+  private boolean activo;
 
-    private String password;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "rol", length = 20, nullable = false)
+  private Rol rol;
 
-    @Column(name="activo",nullable = false)
-    private boolean activo;
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new SimpleGrantedAuthority("ADMIN"));
+    return authorities;
+  }
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="rol", length = 20,nullable=false)
-    private Rol rol;
+  @Override
+  public String getUsername() {
+    return email;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities =new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        return authorities;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return activo;
-    }
+  @Override
+  public boolean isEnabled() {
+    return activo;
+  }
 }

@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import pe.edu.utp.Exception.NoDataFoundException;
 import pe.edu.utp.converter.ArticuloConverter;
-import pe.edu.utp.dto.ArticuloDTO;
+import pe.edu.utp.dto.ArticuloDto;
 import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.service.ArticuloService;
 
@@ -29,72 +28,72 @@ import pe.edu.utp.service.ArticuloService;
 @RequestMapping("/v1/articulos")
 @Validated
 public class ArticuloController {
-	
-	
-	private final ArticuloService articuloService;
-	
-	private final ArticuloConverter articuloConverter;
-	
-	@Autowired
-	public ArticuloController(ArticuloService articuloService,ArticuloConverter articuloConverter) {
-		this.articuloService = articuloService;
-		this.articuloConverter=articuloConverter;
-		
-	}
 
-	@GetMapping
-	public ResponseEntity<List<ArticuloDTO>> getAll(
-			@RequestParam(value="nombreArticulo",required=false,defaultValue="")String nombreArticulo,
-			@RequestParam(value="offset",required=false,defaultValue="0")int pageNumber,
-			@RequestParam(value="limit",required=false,defaultValue="5")int pageSize){
-		
-		Pageable pageable=PageRequest.of(pageNumber, pageSize);
-		List<Articulo>articulos;
-		if(nombreArticulo==null) {
-			articulos= articuloService.findAll(pageable);
-		}else {
-			articulos=articuloService.finByNombre(nombreArticulo, pageable);
-		}
-		
-		if(articulos.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
-		List<ArticuloDTO>articulosDTO=articuloConverter.fromEntity(articulos);
-		return ResponseEntity.ok(articulosDTO);
-	}
-	
-	@GetMapping(value="/{id}")
-	public ResponseEntity<ArticuloDTO>findById(@PathVariable("id") int id) throws NoDataFoundException {
-		Articulo articulo=articuloService.findById(id);
-		if(articulo==null) {
-			return ResponseEntity.notFound().build();
-		}
-	ArticuloDTO articuloDTO=articuloConverter.fromEntity(articulo);
-	return ResponseEntity.ok(articuloDTO);
-	}
-	
-	@PostMapping
-	public ResponseEntity<ArticuloDTO>create(@Valid @RequestBody ArticuloDTO articulo){
-		Articulo registro=articuloService.save(articuloConverter.fromDTO(articulo));
-		ArticuloDTO registroDTO=articuloConverter.fromEntity(registro);
-		return ResponseEntity.status(HttpStatus.CREATED).body(registroDTO);
-		
-	}
-	
-	@PutMapping(value="/{id}")
-	public ResponseEntity<ArticuloDTO>update(@PathVariable("id") int id,@Valid @RequestBody ArticuloDTO articuloDTO){
-		Articulo articuloUpdate=articuloService.update(articuloConverter.fromDTO(articuloDTO));	
-		if(articuloUpdate==null) {
-			return ResponseEntity.notFound().build();
-		}
-		ArticuloDTO articuloUpdateDTO=articuloConverter.fromEntity(articuloUpdate);
-		return ResponseEntity.ok(articuloUpdateDTO);
-	}
-	
-	@DeleteMapping(value="/{id}")
-	public ResponseEntity<ArticuloDTO>delete(@PathVariable("id")int id) throws NoDataFoundException{
-		articuloService.delete(id);
-		return ResponseEntity.ok(null);
-	}
-	
+  private final ArticuloService articuloService;
+
+  private final ArticuloConverter articuloConverter;
+
+  @Autowired
+  public ArticuloController(ArticuloService articuloService, ArticuloConverter articuloConverter) {
+    this.articuloService = articuloService;
+    this.articuloConverter = articuloConverter;
+  }
+
+  @GetMapping
+  public ResponseEntity<List<ArticuloDto>> getAll(
+      @RequestParam(value = "nombreArticulo", required = false, defaultValue = "")
+          String nombreArticulo,
+      @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
+      @RequestParam(value = "limit", required = false, defaultValue = "5") int pageSize) {
+
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    List<Articulo> articulos;
+    if (nombreArticulo == null) {
+      articulos = articuloService.findAll(pageable);
+    } else {
+      articulos = articuloService.finByNombre(nombreArticulo, pageable);
+    }
+
+    if (articulos.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    List<ArticuloDto> articulosDTO = articuloConverter.fromEntity(articulos);
+    return ResponseEntity.ok(articulosDTO);
+  }
+
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<ArticuloDto> findById(@PathVariable("id") int id)
+      throws NoDataFoundException {
+    Articulo articulo = articuloService.findById(id);
+    if (articulo == null) {
+      return ResponseEntity.notFound().build();
+    }
+    ArticuloDto articuloDTO = articuloConverter.fromEntity(articulo);
+    return ResponseEntity.ok(articuloDTO);
+  }
+
+  @PostMapping
+  public ResponseEntity<ArticuloDto> create(@Valid @RequestBody ArticuloDto articulo) {
+    Articulo registro = articuloService.save(articuloConverter.fromDTO(articulo));
+    ArticuloDto registroDTO = articuloConverter.fromEntity(registro);
+    return ResponseEntity.status(HttpStatus.CREATED).body(registroDTO);
+  }
+
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<ArticuloDto> update(
+      @PathVariable("id") int id, @Valid @RequestBody ArticuloDto articuloDTO) {
+    Articulo articuloUpdate = articuloService.update(articuloConverter.fromDTO(articuloDTO));
+    if (articuloUpdate == null) {
+      return ResponseEntity.notFound().build();
+    }
+    ArticuloDto articuloUpdateDTO = articuloConverter.fromEntity(articuloUpdate);
+    return ResponseEntity.ok(articuloUpdateDTO);
+  }
+
+  @DeleteMapping(value = "/{id}")
+  public ResponseEntity<ArticuloDto> delete(@PathVariable("id") int id)
+      throws NoDataFoundException {
+    articuloService.delete(id);
+    return ResponseEntity.ok(null);
+  }
 }

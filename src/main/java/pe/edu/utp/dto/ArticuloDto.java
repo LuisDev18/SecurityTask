@@ -7,18 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Builder
 @NoArgsConstructor
 @Setter
 @Getter
 @AllArgsConstructor
-public class ArticuloDTO {
-	
-	private int id;
-    @NotBlank(message = "El campo nombre no puede estar vacio")
-	private String nombre;
+public class ArticuloDto {
 
-	private Double precio;
+  private int id;
 
+  @NotBlank(message = "El campo nombre no puede estar vacio")
+  private String nombre;
+
+  private Double precio;
 }

@@ -17,36 +17,41 @@ import pe.edu.utp.repository.UsuarioRepository;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UsuarioRepository repository;
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+  private final UsuarioRepository repository;
 
-    //Metodo se utiliza para configurar el proveedor de autenticacion, quien
-    //es responsable de definir la logica de autenticacion de los usuarios y verificar sus credenciales.
-    //generar un objeto Authentication que representa al usuario
-    //autenticado.
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+  @Bean
+  public UserDetailsService userDetailsService() {
+    return username ->
+        repository
+            .findByEmail(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 
-    /*Este metodo es usado por spring security para analizar el tipo de autenticacion requerida
-    y de delegar al authenticationProvider que pueda manejar el tipo de autenticacion que se esta dando
-    jwt,nombre y contraseña, LDAP, etc.
-    */
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+  // Metodo se utiliza para configurar el proveedor de autenticacion, quien
+  // es responsable de definir la logica de autenticacion de los usuarios y verificar sus
+  // credenciales.
+  // generar un objeto Authentication que representa al usuario
+  // autenticado.
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService());
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B);
-    }
+  /*Este metodo es usado por spring security para analizar el tipo de autenticacion requerida
+  y de delegar al authenticationProvider que pueda manejar el tipo de autenticacion que se esta dando
+  jwt,nombre y contraseña, LDAP, etc.
+  */
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B);
+  }
 }
