@@ -23,7 +23,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
-
+          
+      - name: Grant execute permissions to gradlew
+        run: chmod +x gradlew
+        
       - name: Build
         run: ./gradlew build
 
@@ -41,6 +44,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+
+      - name: Grant execute permissions to gradlew
+        run: chmod +x gradlew
 
       - name: Deploy to Azure
         uses: Azure/webapps-deploy@v2
