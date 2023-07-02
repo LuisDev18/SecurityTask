@@ -51,4 +51,4 @@ jobs:
           app-name: 'apirestproductos'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2D8B25E63E0D42BD89A338EB1FF7B2A5 }}
-          package: '*.jar'
+          package: 'articulosapi-0.0.1-SNAPSHOT.jar'
