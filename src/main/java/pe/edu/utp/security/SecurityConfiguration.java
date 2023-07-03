@@ -2,6 +2,7 @@ package pe.edu.utp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +26,21 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    http.csrf()
+    http
+            .cors(cors -> cors
+                    .configurationSource(request -> {
+                      CorsConfiguration configuration = new CorsConfiguration();
+                      configuration.addAllowedOrigin("https://apirestproductos.azurewebsites.net");
+                      configuration.addAllowedMethod(HttpMethod.GET);
+                      configuration.addAllowedMethod(HttpMethod.POST);
+                      configuration.addAllowedMethod(HttpMethod.PUT);
+                      configuration.addAllowedMethod(HttpMethod.DELETE);
+                      configuration.addAllowedHeader("*");
+                      return configuration;
+                    })
+            )
+
+        .csrf()
         .disable()
         .authorizeHttpRequests()
         .requestMatchers("/v1/usuarios", "/v1/usuarios/login")
