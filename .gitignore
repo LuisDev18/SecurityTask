@@ -38,3 +38,4 @@ out/
 
 #Environments
 .env.keypair
+.env.dev
