@@ -1,0 +1,32 @@
+version: '3'
+services:
+  springboot-app:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+        - "8080:8080"
+    environment:
+      - DATASOURCE_HOSTNAME=mysqldb
+      - DATASOURCE_PORT=3306
+      - DATASOURCE_DB_NAME=articulosapi
+      - DATASOURCE_USERNAME=root
+      - DATASOURCE_PASSWORD=admin
+    env_file:
+      - .env.keypair
+    depends_on:
+        - mysqldb
+
+
+  mysqldb:
+    image: mysql:latest
+    ports:
+        - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=articulosapi
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:
