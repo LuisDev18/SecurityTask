@@ -9,6 +9,12 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      DATASOURCE_HOSTNAME: localhost
+      DATASOURCE_PORT: 3306
+      DATASOURCE_DB_NAME: articulosapi
+      DATASOURCE_USERNAME: root
+      DATASOURCE_PASSWORD: admin
     permissions: read-all
     steps:
       - uses: actions/checkout@v2
