@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-import pe.edu.utp.Exception.NoDataFoundException;
+import pe.edu.utp.exception.NoDataFoundException;
 import pe.edu.utp.entity.Articulo;
 
 

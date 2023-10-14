@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import pe.edu.utp.Exception.GeneralServiceException;
-import pe.edu.utp.Exception.NoDataFoundException;
-import pe.edu.utp.Exception.ValidateServiceException;
+import pe.edu.utp.exception.GeneralServiceException;
+import pe.edu.utp.exception.NoDataFoundException;
+import pe.edu.utp.exception.ValidateServiceException;
 import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.repository.ArticuloRepository;
 

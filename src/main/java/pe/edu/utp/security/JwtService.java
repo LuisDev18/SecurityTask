@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   private final PemReader pemReader;
-  private final long accessTokenExpirationTime = 1000 * 60 * 24;
-  private final long refreshTokenExpirationTime = 1000 * 60 * 60 * 24;
+  private final long accessTokenExpirationTime = 1000L * 60 * 24;
+  private final long refreshTokenExpirationTime = 1000L * 60 * 60 * 24;
 
   public String extractUsername(String token) {
     return extractClaim(token, claims -> claims.get("username", String.class));

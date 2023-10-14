@@ -1,6 +1,6 @@
 package pe.edu.utp.validator;
 
-import pe.edu.utp.Exception.ValidateServiceException;
+import pe.edu.utp.exception.ValidateServiceException;
 import pe.edu.utp.entity.Usuario;
 
 public class UsuarioValidator {

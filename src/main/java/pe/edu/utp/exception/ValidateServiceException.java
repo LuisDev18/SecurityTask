@@ -1,4 +1,4 @@
-package pe.edu.utp.Exception;
+package pe.edu.utp.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

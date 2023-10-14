@@ -14,6 +14,7 @@ import pe.edu.utp.dto.UsuarioRequestDto;
 import pe.edu.utp.dto.UsuarioResponseDto;
 import pe.edu.utp.entity.Usuario;
 import pe.edu.utp.service.UsuarioService;
+import pe.edu.utp.util.ConstantesHelpers;
 import pe.edu.utp.util.WrapperResponse;
 
 @RestController
@@ -23,6 +24,7 @@ public class UsuarioController {
 
   private final UsuarioService usuarioService;
   private final UsuarioConverter converter;
+
 
   @GetMapping()
   public ResponseEntity<List<UsuarioResponseDto>> findAll(
@@ -39,13 +41,13 @@ public class UsuarioController {
     }
     List<UsuarioResponseDto> registrosDto = converter.fromEntity(registros);
 
-    return new WrapperResponse(true, "success", registrosDto).createResponse(HttpStatus.OK);
+    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, registrosDto).createResponse(HttpStatus.OK);
   }
 
   @PostMapping()
   public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioRequestDto usuario) {
     Usuario registro = usuarioService.save(converter.registro(usuario));
-    return new WrapperResponse(true, "success", converter.fromEntity(registro))
+    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, converter.fromEntity(registro))
         .createResponse(HttpStatus.CREATED);
   }
 
@@ -56,20 +58,20 @@ public class UsuarioController {
     if (registro == null) {
       return ResponseEntity.notFound().build();
     }
-    return new WrapperResponse(true, "success", converter.fromEntity(registro))
+    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, converter.fromEntity(registro))
         .createResponse(HttpStatus.OK);
   }
 
   @DeleteMapping(value = "/{id}")
   public ResponseEntity<UsuarioRequestDto> delete(@PathVariable("id") int id) {
     usuarioService.delete(id);
-    return new WrapperResponse(true, "success", null).createResponse(HttpStatus.OK);
+    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, null).createResponse(HttpStatus.OK);
   }
 
   @PostMapping(value = "/login")
   public ResponseEntity<WrapperResponse<LoginResponseDto>> login(
       @RequestBody LoginRequestDto request) {
     LoginResponseDto response = usuarioService.login(request);
-    return new WrapperResponse<>(true, "success", response).createResponse(HttpStatus.OK);
+    return new WrapperResponse<>(true, ConstantesHelpers.MESSAGE_SUCCESS, response).createResponse(HttpStatus.OK);
   }
 }

@@ -7,13 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pe.edu.utp.Exception.GeneralServiceException;
-import pe.edu.utp.Exception.NoDataFoundException;
-import pe.edu.utp.Exception.ValidateServiceException;
+import pe.edu.utp.exception.GeneralServiceException;
+import pe.edu.utp.exception.NoDataFoundException;
+import pe.edu.utp.exception.ValidateServiceException;
 import pe.edu.utp.converter.UsuarioConverter;
 import pe.edu.utp.dto.LoginRequestDto;
 import pe.edu.utp.dto.LoginResponseDto;
@@ -23,6 +22,7 @@ import pe.edu.utp.security.JwtService;
 import pe.edu.utp.validator.UsuarioValidator;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -93,7 +93,7 @@ public class UsuarioServiceImpl implements UsuarioService{
             Usuario registroDB=  usuarioRepository.findByEmail(usuario.getEmail()).orElseThrow(
                     ()->new NoDataFoundException("No existe el usuario para el email ingresado")
             );
-          if(registroDB!=null && registroDB.getId()!=usuario.getId()){
+          if(registroDB!=null && !Objects.equals(registroDB.getId(), usuario.getId())){
              throw new ValidateServiceException("Ya existe un registro con el email " +usuario.getEmail());
           }
           Usuario registro= usuarioRepository.findById(usuario.getId()).orElseThrow(
