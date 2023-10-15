@@ -15,13 +15,6 @@ configurations {
 	}
 }
 
-sonar {
-	properties {
-		property "sonar.projectKey", "github-actions-restSchool"
-		property "sonar.projectName", "github-actions-restSchool"
-	}
-}
-
 
 repositories {
 	mavenCentral()
