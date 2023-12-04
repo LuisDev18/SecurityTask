@@ -10,5 +10,6 @@ import pe.edu.utp.entity.Articulo;
 @Repository
 public interface ArticuloRepository extends JpaRepository<Articulo, Integer> {
 
-  List<Articulo> findByNombreContaining(String nombre, Pageable pageable);
+  List<Articulo> findByCategoriaAndMarcaAndPrecioBetween(String categoria, String marca,Double precioMin,Double precioMax,Pageable pageable);
+
 }

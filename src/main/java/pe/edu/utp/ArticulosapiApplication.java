@@ -11,5 +11,4 @@ public class ArticulosapiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ArticulosapiApplication.class, args);
 	}
-
 }

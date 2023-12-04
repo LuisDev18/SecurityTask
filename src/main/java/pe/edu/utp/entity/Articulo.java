@@ -38,6 +38,12 @@ public class Articulo {
 
   private Double precio;
 
+  private String marca;
+
+  private String categoria;
+
+  private Integer stock;
+
   @Column(name = "create_at", nullable = false, updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
   @CreatedDate

@@ -16,5 +16,4 @@ public interface UsuarioService {
     public void delete(int id);
     public LoginResponseDto login(LoginRequestDto loginRequestDto);
 
-    //2:12
 }

@@ -41,17 +41,21 @@ public class ArticuloController {
 
   @GetMapping
   public ResponseEntity<List<ArticuloDto>> getAll(
-      @RequestParam(value = "nombreArticulo", required = false, defaultValue = "")
-          String nombreArticulo,
+
+      @RequestParam(value = "marca", required = false, defaultValue = "") String marca,
+      @RequestParam(value = "categoria", required = false, defaultValue = "") String categoria,
+      @RequestParam(value = "precioMin", required = false, defaultValue = "0") Double precioMin,
+      @RequestParam(value = "precioMax", required = false, defaultValue = "0") Double precioMax,
       @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
       @RequestParam(value = "limit", required = false, defaultValue = "5") int pageSize) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     List<Articulo> articulos;
-    if (nombreArticulo == null) {
+    if (marca == null || categoria == null || precioMin == null || precioMax == null) {
       articulos = articuloService.findAll(pageable);
     } else {
-      articulos = articuloService.finByNombre(nombreArticulo, pageable);
+      articulos = articuloService.findByCategoriaAndMarcaAndPrecio(categoria,marca,precioMin,precioMax, pageable);
+
     }
 
     if (articulos.isEmpty()) {

@@ -1,26 +1,26 @@
 package pe.edu.utp.service;
 
 import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.exception.GeneralServiceException;
 import pe.edu.utp.exception.NoDataFoundException;
 import pe.edu.utp.exception.ValidateServiceException;
-import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.repository.ArticuloRepository;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ArticuloServiceImpl implements ArticuloService {
 
-	@Autowired
-	private ArticuloRepository articuloRepository;
+	private final ArticuloRepository articuloRepository;
 
+	@Cacheable(value = "CacheDemo", key = "#page")
 	@Override
 	@Transactional(readOnly = true)
 	public List<Articulo> findAll(Pageable page) {
@@ -36,11 +36,11 @@ public class ArticuloServiceImpl implements ArticuloService {
 
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<Articulo> finByNombre(String nombre, Pageable pageable) {
-		return articuloRepository.findByNombreContaining(nombre, pageable);
 
+
+	@Override
+	public List<Articulo> findByCategoriaAndMarcaAndPrecio(String categoria, String marca,Double precioMin, Double precioMax, Pageable pageable) {
+		return articuloRepository.findByCategoriaAndMarcaAndPrecioBetween(categoria, marca,precioMin,precioMax,pageable);
 	}
 
 	@Override

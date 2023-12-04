@@ -27,7 +27,7 @@ public class UsuarioController {
 
 
   @GetMapping()
-  public ResponseEntity<List<UsuarioResponseDto>> findAll(
+  public ResponseEntity findAll(
       @RequestParam(value = "email", required = false) String email,
       @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
       @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {

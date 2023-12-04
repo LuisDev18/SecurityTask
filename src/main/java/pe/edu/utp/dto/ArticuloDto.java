@@ -20,6 +20,16 @@ public class ArticuloDto {
   @NotBlank(message = "El campo nombre no puede estar vacio")
   private String nombre;
 
+  @NotBlank(message = "El campo marca no puede estar vacio")
+  private String marca;
+
+  @NotBlank(message = "El campo categoria no puede estar vacio")
+  private String categoria;
+
   @NotNull(message = "El campo precio no puede estar vacio")
   private Double precio;
+
+  @NotNull(message = "El campo stock no puede estar vacio")
+  private int stock;
+
 }

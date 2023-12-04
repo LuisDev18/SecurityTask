@@ -17,6 +17,9 @@ public class ArticuloConverter extends AbstractConverter<Articulo, ArticuloDto> 
           .id(entity.getId())
           .nombre(entity.getNombre())
           .precio(entity.getPrecio())
+          .marca(entity.getMarca())
+          .categoria(entity.getCategoria())
+          .stock(entity.getStock())
           .build();
     }
   }
@@ -30,6 +33,9 @@ public class ArticuloConverter extends AbstractConverter<Articulo, ArticuloDto> 
           .id(dto.getId())
           .nombre(dto.getNombre())
           .precio(dto.getPrecio())
+          .marca(dto.getMarca())
+          .categoria(dto.getCategoria())
+          .stock(dto.getStock())
           .build();
     }
   }

@@ -11,7 +11,8 @@ import pe.edu.utp.entity.Articulo;
 public interface ArticuloService {
 
 	public List<Articulo> findAll(Pageable page);
-	public List<Articulo> finByNombre(String nombre, Pageable pageable);
+
+	public List<Articulo> findByCategoriaAndMarcaAndPrecio(String categoria, String marca,Double precioMin, Double precioMax, Pageable pageable);
 	public Articulo findById(int id)throws NoDataFoundException;
 	public Articulo save(Articulo articulo);
 	public Articulo update(Articulo articulo);
