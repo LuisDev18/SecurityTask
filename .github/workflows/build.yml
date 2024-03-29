@@ -40,4 +40,9 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          DATASOURCE_HOSTNAME: ${{ secrets.DATASOURCE_HOSTNAME }}
+          DATASOURCE_PORT: ${{ secrets.DATASOURCE_PORT }}
+          DATASOURCE_DB_NAME: ${{ secrets.DATASOURCE_DB_NAME }}
+          DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
+          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
         run: ./gradlew build sonar --info
