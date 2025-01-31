@@ -61,8 +61,8 @@ public class ArticuloController {
     if (articulos.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
-    List<ArticuloDto> articulosDto = articuloConverter.fromEntity(articulos);
-    return ResponseEntity.ok(articulosDto);
+    List<ArticuloDto> articulosDTO = articuloConverter.fromEntity(articulos);
+    return ResponseEntity.ok(articulosDTO);
   }
 
   @GetMapping(value = "/{id}")
@@ -72,26 +72,27 @@ public class ArticuloController {
     if (articulo == null) {
       return ResponseEntity.notFound().build();
     }
-    ArticuloDto articuloDto = articuloConverter.fromEntity(articulo);
-    return ResponseEntity.ok(articuloDto);
+    ArticuloDto articuloDTO = articuloConverter.fromEntity(articulo);
+    return ResponseEntity.ok(articuloDTO);
   }
 
   @PostMapping
   public ResponseEntity<ArticuloDto> create(@Valid @RequestBody ArticuloDto articulo) {
     Articulo registro = articuloService.save(articuloConverter.fromDto(articulo));
-    ArticuloDto registroDto = articuloConverter.fromEntity(registro);
-    return ResponseEntity.status(HttpStatus.CREATED).body(registroDto);
+    ArticuloDto registroDTO = articuloConverter.fromEntity(registro);
+    return ResponseEntity.status(HttpStatus.CREATED).body(registroDTO);
   }
 
   @PutMapping(value = "/{id}")
   public ResponseEntity<ArticuloDto> update(
       @PathVariable("id") int id, @Valid @RequestBody ArticuloDto articuloDto) {
     Articulo articuloUpdate = articuloService.update(articuloConverter.fromDto(articuloDto));
+
     if (articuloUpdate == null) {
       return ResponseEntity.notFound().build();
     }
-    ArticuloDto articuloUpdateDto = articuloConverter.fromEntity(articuloUpdate);
-    return ResponseEntity.ok(articuloUpdateDto);
+    ArticuloDto articuloUpdateDTO = articuloConverter.fromEntity(articuloUpdate);
+    return ResponseEntity.ok(articuloUpdateDTO);
   }
 
   @DeleteMapping(value = "/{id}")
