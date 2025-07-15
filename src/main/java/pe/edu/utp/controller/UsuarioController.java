@@ -2,6 +2,7 @@ package pe.edu.utp.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import pe.edu.utp.util.ConstantesHelpers;
 import pe.edu.utp.util.WrapperResponse;
 
 @RestController
-@RequestMapping("/v1/usuarios")
 @RequiredArgsConstructor
 public class UsuarioController {
 
@@ -26,7 +26,7 @@ public class UsuarioController {
   private final UsuarioConverter converter;
 
 
-  @GetMapping()
+  @GetMapping("/usuarios")
   public ResponseEntity findAll(
       @RequestParam(value = "email", required = false) String email,
       @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
@@ -43,14 +43,14 @@ public class UsuarioController {
     return new WrapperResponse(true, "success", registrosDTO).createResponse(HttpStatus.OK);
   }
 
-  @PostMapping()
+  @PostMapping("/usuarios-register")
   public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioRequestDto usuario) {
     Usuario registro = usuarioService.save(converter.registro(usuario));
     return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, converter.fromEntity(registro))
         .createResponse(HttpStatus.CREATED);
   }
 
-  @PutMapping(value = "/{id}")
+  @PutMapping(value = "/usuarios/{id}")
   public ResponseEntity<UsuarioResponseDto> update(
       @PathVariable("id") int id, @RequestBody UsuarioRequestDto usuario) {
     Usuario registro = usuarioService.update(converter.registro(usuario));
@@ -61,13 +61,14 @@ public class UsuarioController {
         .createResponse(HttpStatus.OK);
   }
 
-  @DeleteMapping(value = "/{id}")
+  @DeleteMapping(value = "/usuarios/{id}")
   public ResponseEntity<UsuarioRequestDto> delete(@PathVariable("id") int id) {
     usuarioService.delete(id);
     return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, null).createResponse(HttpStatus.OK);
   }
 
-  @PostMapping(value = "/login")
+
+  @PostMapping(value = "/usuarios/login")
   public ResponseEntity<WrapperResponse<LoginResponseDto>> login(
       @RequestBody LoginRequestDto request) {
     LoginResponseDto response = usuarioService.login(request);

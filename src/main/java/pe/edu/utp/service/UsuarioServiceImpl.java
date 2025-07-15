@@ -56,6 +56,8 @@ public class UsuarioServiceImpl implements UsuarioService{
       }
     }
 
+
+
     @Override
     public List<Usuario> findByEmail(String email, Pageable page) {
        try {

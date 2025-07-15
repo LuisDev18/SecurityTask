@@ -25,7 +25,7 @@ import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.service.ArticuloService;
 
 @RestController
-@RequestMapping("/v1/articulos")
+@RequestMapping("/articulos")
 @Validated
 public class ArticuloController {
 
