@@ -26,22 +26,17 @@ public class UsuarioController {
   private final UsuarioConverter converter;
 
 
-  @GetMapping("/usuarios")
-  public ResponseEntity findAll(
-      @RequestParam(value = "email", required = false) String email,
-      @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
-      @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
+@GetMapping("/usuarios")
+    public ResponseEntity<List<UsuarioResponseDto>> findAll(
+        @RequestParam(value = "email", required = false) String email,
+        @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
+        @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) throws Exception {
 
-    Pageable pagina = PageRequest.of(pageNumber, pageSize);
-    List<Usuario> registros;
-    if (email == null) {
-      registros = usuarioService.findAll(pagina);
-    } else {
-      registros = usuarioService.findByEmail(email, pagina);
+      Pageable pagina = PageRequest.of(pageNumber, pageSize);
+      List<Usuario> registros = usuarioService.findAll(pagina);
+      List<UsuarioResponseDto> registrosDTO = converter.fromEntity(registros);
+      return new WrapperResponse(true, "success", registrosDTO).createResponse(HttpStatus.OK);
     }
-    List<UsuarioResponseDto> registrosDTO = converter.fromEntity(registros);
-    return new WrapperResponse(true, "success", registrosDTO).createResponse(HttpStatus.OK);
-  }
 
   @PostMapping("/usuarios-register")
   public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioRequestDto usuario) {

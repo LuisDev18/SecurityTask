@@ -8,7 +8,7 @@ import pe.edu.utp.entity.Usuario;
 import java.util.List;
 
 public interface UsuarioService {
-    public List<Usuario> findAll(Pageable page);
+    public List<Usuario> findAll(Pageable page) throws Exception;
     public List<Usuario> findByEmail(String email, Pageable page);
     public Usuario findById(int id);
     public Usuario update(Usuario usuario);

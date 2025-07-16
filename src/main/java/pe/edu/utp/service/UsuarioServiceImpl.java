@@ -43,18 +43,15 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 
 
-    @Override
-    public List<Usuario> findAll(Pageable page) {
-      try {
-          return usuarioRepository.findAll(page).toList();
-      }catch (ValidateServiceException | NoDataFoundException e){
-          logger.info(e.getMessage());
-          throw e;
-      }catch (Exception e){
-          logger.error(e.getMessage());
-          throw new GeneralServiceException(e.getMessage());
-      }
-    }
+ @Override
+ public List<Usuario> findAll(Pageable page) throws Exception {
+     try {
+         return usuarioRepository.findAll(page).toList();
+     } catch (Exception e) {
+         logger.error(e.getMessage(), e);
+         throw (e instanceof ValidateServiceException || e instanceof NoDataFoundException) ? e : new GeneralServiceException(e.getMessage());
+     }
+ }
 
 
 
