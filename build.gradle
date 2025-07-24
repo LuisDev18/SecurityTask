@@ -1,12 +1,12 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.0.5'
-	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.springframework.boot' version '3.5.3' // Actualizado a 3.5.3
+	id 'io.spring.dependency-management' version '1.1.0' // Generalmente compatible con Spring Boot 3.x
 }
 
 group = 'pe.edu.utp'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '21' // Actualizado a Java 21
 
 configurations {
 	compileOnly {
@@ -22,7 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'mysql:mysql-connector-java:8.0.23' // MySQL Connector 8.0.23 podría ser viejo para Java 17, considera 8.0.33+
+	implementation 'mysql:mysql-connector-java:8.0.30' // Actualizado a una versión más reciente
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -31,22 +31,24 @@ dependencies {
 	implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 
+	//Dependencia para migraciones de base de datos
+	implementation 'org.flywaydb:flyway-core:9.16.1' // Actualizado a una versión más reciente
+	implementation 'org.flywaydb:flyway-mysql:9.16.1'	 // Actualizado a una versión más reciente
+		
+
 	// Dependencias de Lombok y MapStruct para el procesamiento de anotaciones
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // ¡Importante!
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0.Beta1' // Usa la misma versión de mapstruct en processor que en implementation
-
-	implementation 'org.mapstruct:mapstruct:1.6.0.Beta1' // Versión para Java 17 y Spring Boot 3.0.5
-	// La versión 1.6.3 que tenías es probablemente un typo, la última es 1.6.0.Beta1
-	// O tal vez quisiste usar la 1.5.5.Final
-	// Verifica la última versión compatible con tu configuración.
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	// MapStruct: Usando la versión estable 1.5.5.Final
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.projectlombok:lombok:1.18.28' // Si necesitas Lombok en test scope
+	testImplementation 'org.projectlombok:lombok:1.18.28'
 }
 
 tasks.named('test') {
