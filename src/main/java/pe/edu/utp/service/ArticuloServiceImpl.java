@@ -1,16 +1,17 @@
 package pe.edu.utp.service;
 
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import pe.edu.utp.converter.ArticuloConverter;
+import pe.edu.utp.dto.ArticuloDto;
 import pe.edu.utp.entity.Articulo;
-import pe.edu.utp.exception.GeneralServiceException;
 import pe.edu.utp.exception.NoDataFoundException;
-import pe.edu.utp.exception.ValidateServiceException;
 import pe.edu.utp.repository.ArticuloRepository;
 
 @Service
@@ -19,68 +20,61 @@ import pe.edu.utp.repository.ArticuloRepository;
 public class ArticuloServiceImpl implements ArticuloService {
 
 	private final ArticuloRepository articuloRepository;
-
-	@Cacheable(value = "CacheDemo", key = "#page")
-	@Override
-	@Transactional(readOnly = true)
-	public List<Articulo> findAll(Pageable page) {
-		try {
-			return articuloRepository.findAll(page).toList();
-		}catch (ValidateServiceException| NoDataFoundException e){
-			log.info(e.getMessage());
-			throw e;
-		}catch(Exception e){
-			log.error(e.getMessage());
-			throw new GeneralServiceException(e.getMessage());
-		}
-
-	}
-
-
+	private final ArticuloConverter articuloConverter;
 
 	@Override
-	public List<Articulo> findByCategoriaAndMarcaAndPrecio(String categoria, String marca,Double precioMin, Double precioMax, Pageable pageable) {
-		return articuloRepository.findByCategoriaAndMarcaAndPrecioBetween(categoria, marca,precioMin,precioMax,pageable);
+	public List<ArticuloDto> findAll(Pageable page) {
+		var articulos = articuloRepository.findAll(page).toList();
+		return articuloConverter.fromEntity(articulos);
+
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Articulo findById(int id) throws NoDataFoundException {
-		Articulo articuloDB = articuloRepository.findById(id).orElse(null);
-		if (articuloDB != null) {
-			return articuloDB;
-		} else {
-			throw new NoDataFoundException("No existe un articulo con ese id");
-		}
+	public List<ArticuloDto> findByCategoriaAndMarcaAndPrecio(String categoria, String marca, Double precioMin,
+			Double precioMax, Pageable pageable) {
+		var result = articuloConverter.fromEntity(
+				articuloRepository.findByCategoriaAndMarcaAndPrecioBetween(categoria, marca, precioMin, precioMax,
+						pageable));
+		return result;
+	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public ArticuloDto findById(int id) {
+		Articulo articuloDB = findByArticleId(id);
+		return articuloConverter.fromEntity(articuloDB);
 	}
 
 	@Override
 	@Transactional
-	public Articulo save(Articulo articulo) {
-
-		return articuloRepository.save(articulo);
+	public Articulo save(ArticuloDto articulo) {
+		var entity = articuloConverter.fromDto(articulo);
+		return articuloRepository.save(entity);
 	}
 
 	@Override
 	@Transactional
-	public Articulo update(Articulo articulo) {
-		Articulo registro = articuloRepository.findById(articulo.getId()).orElseThrow();
-		registro.setNombre(articulo.getNombre());
-		registro.setPrecio(articulo.getPrecio());
+	public Articulo update(ArticuloDto articuloDto, int id) {
+		Articulo registro = findByArticleId(id);
+		registro.setNombre(articuloDto.getNombre());
+		registro.setPrecio(articuloDto.getPrecio());
 		return articuloRepository.save(registro);
 	}
 
 	@Override
 	@Transactional
-	public void delete(int id) throws NoDataFoundException {
+	public void delete(int id) {
 		Articulo registro = articuloRepository.findById(id).orElse(null);
-		if (registro != null) {
+		if (registro != null)
 			articuloRepository.delete(registro);
-		} else {
-			throw new NoDataFoundException("No existe un articulo con ese id");
-		}
 
+	}
+
+	private Articulo findByArticleId(int id) {
+
+		return articuloRepository.findById(id).orElseThrow(
+				() -> new NoDataFoundException("No existe un articulo con ese id: %d".formatted(id)));
 	}
 
 }
