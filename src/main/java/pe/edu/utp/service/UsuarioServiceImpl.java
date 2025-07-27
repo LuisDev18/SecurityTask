@@ -153,8 +153,7 @@ public class UsuarioServiceImpl implements UsuarioService{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword()));
             var usuario=usuarioRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow();
             var jwtToken=jwtService.generateToken(usuario);
-            var refreshJwtToken=jwtService.generateRefreshToken(usuario);
-            return new LoginResponseDto(usuarioConverter.fromEntity(usuario),jwtToken,refreshJwtToken);
+            return new LoginResponseDto(usuarioConverter.fromEntity(usuario), jwtToken);
         } catch (JwtException e) {
             logger.info(e.getMessage(),e);
             throw new ValidateServiceException(e.getMessage());
