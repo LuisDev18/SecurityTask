@@ -24,10 +24,6 @@ public class GlobalExceptionHandler {
         // Extrae los errores de validación y los mapea a tu estructura ApiError
         List<ApiError> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> new ApiError(
-                        // Puedes ajustar el 'code' si quieres algo más específico (ej.
-                        // "REQUIRED_FIELD", "INVALID_EMAIL_FORMAT")
-                        // fieldError.getCode() a menudo es el nombre de la anotación de validación (ej.
-                        // "NotBlank", "NotNull")
                         fieldError.getCode() != null ? fieldError.getCode() : "VALIDATION_ERROR",
                         fieldError.getField(),
                         fieldError.getDefaultMessage()))
@@ -36,9 +32,9 @@ public class GlobalExceptionHandler {
         // Construye la ApiResponse de error para validación
         ApiResponse<Object> apiResponse = ApiResponse.error(
                 HttpStatus.BAD_REQUEST, // HTTP Status 400
-                "VALIDATION_ERROR", // Código de error de negocio
-                "Validation failed for one or more fields.", // Mensaje general
-                errors // Lista de errores detallados
+                "VALIDATION_ERROR", 
+                "Validation failed for one or more fields.", 
+                errors 
         );
         return apiResponse.toResponseEntity();
     }
