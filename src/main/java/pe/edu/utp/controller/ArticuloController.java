@@ -20,9 +20,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pe.edu.utp.dto.ArticuloDto;
+import pe.edu.utp.dto.ArticuloResponseDto;
 import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.exception.NoDataFoundException;
 import pe.edu.utp.service.ArticuloService;
+import pe.edu.utp.util.ApiResponse;
 
 @RestController
 @RequestMapping("/articulos")
@@ -33,36 +35,36 @@ public class ArticuloController {
   private final ArticuloService articuloService;
 
   @GetMapping
-  public ResponseEntity<List<ArticuloDto>> getAll(
+  public ResponseEntity<ApiResponse<List<ArticuloResponseDto>>> getAll(
 
-      @RequestParam(value = "marca", required = false, defaultValue = "") String marca,
-      @RequestParam(value = "categoria", required = false, defaultValue = "") String categoria,
-      @RequestParam(value = "precioMin", required = false, defaultValue = "0") Double precioMin,
-      @RequestParam(value = "precioMax", required = false, defaultValue = "0") Double precioMax,
+      @RequestParam(value = "marca", required = false) String marca,
+      @RequestParam(value = "categoria", required = false) String categoria,
+      @RequestParam(value = "precioMin", required = false) Double precioMin,
+      @RequestParam(value = "precioMax", required = false) Double precioMax,
       @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
       @RequestParam(value = "limit", required = false, defaultValue = "5") int pageSize) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
-    List<ArticuloDto> articulos;
-    if (marca == null || categoria == null || precioMin == null || precioMax == null) {
-      articulos = articuloService.findAll(pageable);
-    } else {
+    List<ArticuloResponseDto> articulos;
+    if (marca !=null || categoria != null || precioMin != null || precioMax != null) {
       articulos = articuloService.findByCategoriaAndMarcaAndPrecio(categoria, marca, precioMin, precioMax, pageable);
+    } else {
+       articulos = articuloService.findAll(pageable);
     }
-    return ResponseEntity.ok(articulos);
+    return ApiResponse.ok(articulos).toResponseEntity();
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<ArticuloDto> findById(@PathVariable("id") int id) {
+  public ResponseEntity<ApiResponse<ArticuloResponseDto>> findById(@PathVariable("id") int id) {
     log.info("Obteniendo articulo con ID: {}", id);
     var response = articuloService.findById(id);
-    return ResponseEntity.ok(response);
+    return ApiResponse.ok(response).toResponseEntity();
   }
 
   @PostMapping
-  public ResponseEntity<Articulo> create(@Valid @RequestBody ArticuloDto articuloDto) {
+  public ResponseEntity<ApiResponse<Articulo>> create(@Valid @RequestBody ArticuloDto articuloDto) {
     Articulo registro = articuloService.save(articuloDto);
-    return ResponseEntity.status(HttpStatus.CREATED).body(registro);
+    return ApiResponse.created("Articulo creado exitosamente", registro).toResponseEntity();
   }
 
   @PutMapping(value = "/{id}")

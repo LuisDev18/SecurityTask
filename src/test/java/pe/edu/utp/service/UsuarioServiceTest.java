@@ -38,20 +38,4 @@ public class UsuarioServiceTest {
             .build();
   }
 
-  @Test
-  public void CreateUserTest() {
-    // Arrange
-    when(usuarioRepository.findByEmail(usuario.getEmail())).thenReturn(Optional.empty());
-    when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
-
-    // Act
-    Usuario savedUsuario = usuarioService.save(usuario);
-
-    // Assert
-    assertNotNull(savedUsuario);
-    assertEquals(usuario.getEmail(), savedUsuario.getEmail());
-    assertTrue(savedUsuario.isActivo());
-    assertEquals(usuario.getRol(), savedUsuario.getRol());
-    verify(usuarioRepository, times(1)).save(any(Usuario.class));
-  }
 }

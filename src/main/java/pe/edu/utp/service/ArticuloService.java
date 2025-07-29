@@ -4,18 +4,17 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
-import pe.edu.utp.exception.NoDataFoundException;
 import pe.edu.utp.dto.ArticuloDto;
+import pe.edu.utp.dto.ArticuloResponseDto;
 import pe.edu.utp.entity.Articulo;
 
 
 public interface ArticuloService {
 
-	 List<ArticuloDto> findAll(Pageable page);
-
-	 List<ArticuloDto> findByCategoriaAndMarcaAndPrecio(String categoria, String marca,Double precioMin, Double precioMax, Pageable pageable);
-	 ArticuloDto findById(int id);
+	 List<ArticuloResponseDto> findAll(Pageable page);
+	 List<ArticuloResponseDto> findByCategoriaAndMarcaAndPrecio(String categoria, String marca,Double precioMin, Double precioMax, Pageable pageable);
+	 ArticuloResponseDto findById(int id);
 	 Articulo save(ArticuloDto articulo);
 	 Articulo update(ArticuloDto articulo, int id);
-	 void delete(int id)throws NoDataFoundException;
+	 void delete(int id);
 }

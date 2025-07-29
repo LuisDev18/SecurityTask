@@ -23,8 +23,7 @@ import pe.edu.utp.dto.UsuarioRequestDto;
 import pe.edu.utp.dto.UsuarioResponseDto;
 import pe.edu.utp.entity.Usuario;
 import pe.edu.utp.service.UsuarioService;
-import pe.edu.utp.util.ConstantesHelpers;
-import pe.edu.utp.util.WrapperResponse;
+import pe.edu.utp.util.ApiResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class UsuarioController {
 
 
 @GetMapping("/usuarios")
-    public ResponseEntity<List<UsuarioResponseDto>> findAll(
+    public ResponseEntity<ApiResponse<List<UsuarioResponseDto>>> findAll(
         @RequestParam(value = "email", required = false) String email,
         @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
         @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) throws Exception {
@@ -43,38 +42,36 @@ public class UsuarioController {
       Pageable pagina = PageRequest.of(pageNumber, pageSize);
       List<Usuario> registros = usuarioService.findAll(pagina);
       List<UsuarioResponseDto> registrosDTO = converter.fromEntity(registros);
-      return new WrapperResponse(true, "success", registrosDTO).createResponse(HttpStatus.OK);
+     return ApiResponse.ok("Users retrieved successfully", registrosDTO).toResponseEntity();
     }
 
   @PostMapping("/usuarios-register")
-  public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioRequestDto usuario) {
-    Usuario registro = usuarioService.save(converter.registro(usuario));
-    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, converter.fromEntity(registro))
-        .createResponse(HttpStatus.CREATED);
+  public ResponseEntity<ApiResponse<UsuarioResponseDto>> create(@RequestBody UsuarioRequestDto usuario) {
+    Usuario registro = usuarioService.save(usuario);
+    return ApiResponse.created("User created successfully", converter.fromEntity(registro)).toResponseEntity();
   }
 
   @PutMapping(value = "/usuarios/{id}")
-  public ResponseEntity<UsuarioResponseDto> update(
+  public ResponseEntity<ApiResponse<UsuarioResponseDto>> update(
       @PathVariable("id") int id, @RequestBody UsuarioRequestDto usuario) {
-    Usuario registro = usuarioService.update(converter.registro(usuario));
+    Usuario registro = usuarioService.update(usuario, id);
     if (registro == null) {
       return ResponseEntity.notFound().build();
     }
-    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, converter.fromEntity(registro))
-        .createResponse(HttpStatus.OK);
+     return ApiResponse.ok("User updated successfully", converter.fromEntity(registro)).toResponseEntity();
   }
 
   @DeleteMapping(value = "/usuarios/{id}")
-  public ResponseEntity<UsuarioRequestDto> delete(@PathVariable("id") int id) {
+  public ResponseEntity<ApiResponse<Void>> delete(@PathVariable("id") int id) {
     usuarioService.delete(id);
-    return new WrapperResponse(true, ConstantesHelpers.MESSAGE_SUCCESS, null).createResponse(HttpStatus.OK);
+     return ApiResponse.noContent().toResponseEntity();
   }
 
 
   @PostMapping(value = "/usuarios/login")
-  public ResponseEntity<WrapperResponse<LoginResponseDto>> login(
+  public ResponseEntity<ApiResponse<LoginResponseDto>> login(
       @RequestBody LoginRequestDto request) {
     LoginResponseDto response = usuarioService.login(request);
-    return new WrapperResponse<>(true, ConstantesHelpers.MESSAGE_SUCCESS, response).createResponse(HttpStatus.OK);
+    return ApiResponse.ok("Login successfully", response).toResponseEntity();
   }
 }

@@ -14,9 +14,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class ArticuloDto {
-
-  private int id;
-
+  
   @NotBlank(message = "El campo nombre no puede estar vacio")
   private String nombre;
 

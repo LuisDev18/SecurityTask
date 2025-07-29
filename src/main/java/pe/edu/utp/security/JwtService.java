@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtService {
 
   private final PemReader pemReader;
-  private final long accessTokenExpirationTime = 1000L * 60 * 24;
+  private final long accessTokenExpirationTime = 1000L * 60 * 24*60;
   private static final String TOKEN_HEADER = "Authorization";
   private static final String TOKEN_PREFIX = "Bearer ";
 
