@@ -1,7 +1,6 @@
 package pe.edu.utp.converter;
 
 import org.springframework.stereotype.Component;
-import pe.edu.utp.dto.UsuarioRequestDto;
 import pe.edu.utp.dto.UsuarioResponseDto;
 import pe.edu.utp.entity.Rol;
 import pe.edu.utp.entity.Usuario;
@@ -36,9 +35,4 @@ public class UsuarioConverter extends AbstractConverter<Usuario, UsuarioResponse
     }
   }
 
-  public Usuario registro(UsuarioRequestDto dto) {
-    if (dto == null) return null;
-    Rol rol = Rol.valueOf(dto.getRol().toUpperCase());
-    return Usuario.builder().email(dto.getEmail()).password(dto.getPassword()).rol(rol).build();
-  }
 }

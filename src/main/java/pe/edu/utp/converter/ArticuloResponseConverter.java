@@ -1,19 +1,20 @@
 package pe.edu.utp.converter;
 
 import org.springframework.stereotype.Component;
-import pe.edu.utp.dto.ArticuloDto;
+
+import pe.edu.utp.dto.ArticuloResponseDto;
 import pe.edu.utp.entity.Articulo;
 
 @Component
-public class ArticuloConverter extends AbstractConverter<Articulo, ArticuloDto> {
+public class ArticuloResponseConverter extends AbstractConverter<Articulo, ArticuloResponseDto> {
 
   @Override
-  public ArticuloDto fromEntity(Articulo entity) {
-
+  public ArticuloResponseDto fromEntity(Articulo entity) {
     if (entity == null) {
       return null;
     } else {
-      return ArticuloDto.builder()
+      return ArticuloResponseDto.builder()
+          .id(entity.getId())
           .nombre(entity.getNombre())
           .precio(entity.getPrecio())
           .marca(entity.getMarca())
@@ -24,11 +25,12 @@ public class ArticuloConverter extends AbstractConverter<Articulo, ArticuloDto> 
   }
 
   @Override
-  public Articulo fromDto(ArticuloDto dto) {
+  public Articulo fromDto(ArticuloResponseDto dto) {
     if (dto == null) {
       return null;
     } else {
       return Articulo.builder()
+          .id(dto.getId())
           .nombre(dto.getNombre())
           .precio(dto.getPrecio())
           .marca(dto.getMarca())
@@ -37,4 +39,5 @@ public class ArticuloConverter extends AbstractConverter<Articulo, ArticuloDto> 
           .build();
     }
   }
+
 }
