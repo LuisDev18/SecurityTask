@@ -1,9 +1,12 @@
 package pe.edu.utp.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +44,7 @@ public class ArticuloServiceImpl implements ArticuloService {
 	}
 
 	@Override
-	public ArticuloResponseDto findById(int id) {
+	public ArticuloResponseDto findById(Integer id) {
 		Articulo articuloDB = findByArticleId(id);
 		return articuloResponseConverter.fromEntity(articuloDB);
 	}
@@ -53,7 +56,7 @@ public class ArticuloServiceImpl implements ArticuloService {
 	}
 
 	@Override
-	public Articulo update(ArticuloDto articuloDto, int id) {
+	public Articulo update(ArticuloDto articuloDto, Integer id) {
 		Articulo registro = findByArticleId(id);
 		registro.setNombre(articuloDto.getNombre());
 		registro.setPrecio(articuloDto.getPrecio());
@@ -61,15 +64,26 @@ public class ArticuloServiceImpl implements ArticuloService {
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(Integer id) {
 		Articulo registro = findByArticleId(id);
 		articuloRepository.delete(registro);
 
 	}
 
-	private Articulo findByArticleId(int id) {
+	private Articulo findByArticleId(Integer id) {
 		return articuloRepository.findById(id).orElseThrow(
 				() -> new NoDataFoundException("No existe un articulo con ese id: %d".formatted(id)));
+	}
+
+	@Override
+	public Articulo partialUpdate(Integer id, Map<String, Object> fields) {
+		var articuloDb = findByArticleId(id);
+		fields.forEach((key, value)->{
+			Field field = ReflectionUtils.findField(Articulo.class, key);
+			field.setAccessible(true);
+			ReflectionUtils.setField(field, articuloDb, value);
+		});
+		return articuloRepository.save(articuloDb);
 	}
 
 }
