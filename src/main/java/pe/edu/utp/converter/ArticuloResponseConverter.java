@@ -13,14 +13,15 @@ public class ArticuloResponseConverter extends AbstractConverter<Articulo, Artic
     if (entity == null) {
       return null;
     } else {
-      return ArticuloResponseDto.builder()
-          .id(entity.getId())
-          .nombre(entity.getNombre())
-          .precio(entity.getPrecio())
-          .marca(entity.getMarca())
-          .categoria(entity.getCategoria())
-          .stock(entity.getStock())
-          .build();
+      return ArticuloResponseDto
+        .builder()
+        .id(entity.getId())
+        .nombre(entity.getNombre())
+        .precio(entity.getPrecio())
+        .marca(entity.getMarca())
+        .categoria(entity.getCategoria())
+        .stock(entity.getStock())
+        .build();
     }
   }
 
@@ -29,15 +30,15 @@ public class ArticuloResponseConverter extends AbstractConverter<Articulo, Artic
     if (dto == null) {
       return null;
     } else {
-      return Articulo.builder()
-          .id(dto.getId())
-          .nombre(dto.getNombre())
-          .precio(dto.getPrecio())
-          .marca(dto.getMarca())
-          .categoria(dto.getCategoria())
-          .stock(dto.getStock())
-          .build();
+      return Articulo
+        .builder()
+        .id(dto.getId())
+        .nombre(dto.getNombre())
+        .precio(dto.getPrecio())
+        .marca(dto.getMarca())
+        .categoria(dto.getCategoria())
+        .stock(dto.getStock())
+        .build();
     }
   }
-
 }

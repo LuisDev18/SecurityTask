@@ -1,4 +1,5 @@
 package pe.edu.utp.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,10 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class UsuarioResponseDto {
-    private int id;
-    private String email;
-    private String rol;
-    private boolean activo;
+
+  private int id;
+  private String email;
+  private String rol;
+  private boolean activo;
 }
-
-

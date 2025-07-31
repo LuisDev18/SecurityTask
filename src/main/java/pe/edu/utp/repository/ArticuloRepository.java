@@ -1,6 +1,7 @@
 package pe.edu.utp.repository;
 
 import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,19 +12,20 @@ import pe.edu.utp.entity.Articulo;
 
 @Repository
 public interface ArticuloRepository extends JpaRepository<Articulo, Integer> {
-
-  @Query("""
+  @Query(
+    """
            SELECT a FROM Articulo a
            WHERE (:categoria IS NULL OR  a.categoria = :categoria)
            AND (:marca IS NULL OR a.marca = :marca)
            AND (:precioMin IS NULL OR a.precio >= :precioMin)
            AND (:precioMax IS NULL OR a.precio <= :precioMax)
-           """)
+           """
+  )
   List<Articulo> findByCategoriaAndMarcaAndPrecioBetween(
-   @Param("categoria") String categoria,
-   @Param ("marca") String marca,
-   @Param("precioMin") Double precioMin,
-   @Param ("precioMax") Double precioMax,
-   Pageable pageable);
-
+    @Param("categoria") String categoria,
+    @Param("marca") String marca,
+    @Param("precioMin") Double precioMin,
+    @Param("precioMax") Double precioMax,
+    Pageable pageable
+  );
 }

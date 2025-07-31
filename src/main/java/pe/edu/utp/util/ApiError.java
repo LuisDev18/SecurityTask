@@ -10,7 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiError {
-    private String code;
-    private String field; 
-    private String message;
+
+  private String code;
+  private String field;
+  private String message;
 }

@@ -3,9 +3,11 @@ package pe.edu.utp.controller;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import pe.edu.utp.dto.ArticuloDto;
 import pe.edu.utp.dto.ArticuloResponseDto;
 import pe.edu.utp.entity.Articulo;
@@ -38,20 +37,26 @@ public class ArticuloController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<ArticuloResponseDto>>> getAll(
-
-      @RequestParam(value = "marca", required = false) String marca,
-      @RequestParam(value = "categoria", required = false) String categoria,
-      @RequestParam(value = "precioMin", required = false) Double precioMin,
-      @RequestParam(value = "precioMax", required = false) Double precioMax,
-      @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
-      @RequestParam(value = "limit", required = false, defaultValue = "5") int pageSize) {
-
+    @RequestParam(value = "marca", required = false) String marca,
+    @RequestParam(value = "categoria", required = false) String categoria,
+    @RequestParam(value = "precioMin", required = false) Double precioMin,
+    @RequestParam(value = "precioMax", required = false) Double precioMax,
+    @RequestParam(value = "offset", required = false, defaultValue = "0") int pageNumber,
+    @RequestParam(value = "limit", required = false, defaultValue = "5") int pageSize
+  ) {
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     List<ArticuloResponseDto> articulos;
-    if (marca !=null || categoria != null || precioMin != null || precioMax != null) {
-      articulos = articuloService.findByCategoriaAndMarcaAndPrecio(categoria, marca, precioMin, precioMax, pageable);
+    if (marca != null || categoria != null || precioMin != null || precioMax != null) {
+      articulos =
+        articuloService.findByCategoriaAndMarcaAndPrecio(
+          categoria,
+          marca,
+          precioMin,
+          precioMax,
+          pageable
+        );
     } else {
-       articulos = articuloService.findAll(pageable);
+      articulos = articuloService.findAll(pageable);
     }
     return ApiResponse.ok(articulos).toResponseEntity();
   }
@@ -71,21 +76,25 @@ public class ArticuloController {
 
   @PutMapping(value = "/{id}")
   public ResponseEntity<Articulo> update(
-      @PathVariable("id") Integer id, @Valid @RequestBody ArticuloDto articuloDto) {
+    @PathVariable("id") Integer id,
+    @Valid @RequestBody ArticuloDto articuloDto
+  ) {
     Articulo articuloUpdate = articuloService.update(articuloDto, id);
     return ResponseEntity.ok(articuloUpdate);
   }
 
   @PatchMapping(value = "/{id}")
-  public ResponseEntity<ApiResponse<Articulo>> partialUpdate(@PathVariable("id") Integer id, @RequestBody Map<String, Object> fields) {
+  public ResponseEntity<ApiResponse<Articulo>> partialUpdate(
+    @PathVariable("id") Integer id,
+    @RequestBody Map<String, Object> fields
+  ) {
     var articuloUpdate = articuloService.partialUpdate(id, fields);
     return ApiResponse.ok(articuloUpdate).toResponseEntity();
   }
 
-
   @DeleteMapping(value = "/{id}")
   public ResponseEntity<ArticuloDto> delete(@PathVariable("id") Integer id)
-      throws NoDataFoundException {
+    throws NoDataFoundException {
     articuloService.delete(id);
     return ResponseEntity.ok(null);
   }

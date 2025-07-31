@@ -1,11 +1,11 @@
 package pe.edu.utp.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
 import pe.edu.utp.entity.Usuario;
 import pe.edu.utp.repository.UsuarioRepository;
 
@@ -13,18 +13,21 @@ import pe.edu.utp.repository.UsuarioRepository;
 @RequiredArgsConstructor
 public class CustomerUserDetailsService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+  private final UsuarioRepository usuarioRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // TODO Auto-generated method stub
-        Usuario usuario = usuarioRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // TODO Auto-generated method stub
+    Usuario usuario = usuarioRepository
+      .findByEmail(username)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username)
+      );
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(usuario.getEmail())
-                .password(usuario.getPassword())
-                .roles(usuario.getRol().name()).build();
-    }
-
+    return org.springframework.security.core.userdetails.User
+      .builder()
+      .username(usuario.getEmail())
+      .password(usuario.getPassword())
+      .roles(usuario.getRol().name())
+      .build();
+  }
 }
