@@ -7,7 +7,7 @@ plugins {
 
 group = 'pe.edu.utp'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '21' // Actualizado a Java 21
+sourceCompatibility = '21' 
 
 configurations {
 	compileOnly {

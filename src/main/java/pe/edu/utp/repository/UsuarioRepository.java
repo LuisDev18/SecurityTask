@@ -9,6 +9,5 @@ import pe.edu.utp.entity.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-
   Optional<Usuario> findByEmail(String email);
 }

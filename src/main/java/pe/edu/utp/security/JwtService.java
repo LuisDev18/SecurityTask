@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +12,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtService {
 
   private final PemReader pemReader;
-  private final long accessTokenExpirationTime = 1000L * 60 * 24*60;
+  private final long accessTokenExpirationTime = 1000L * 60 * 24 * 60;
   private static final String TOKEN_HEADER = "Authorization";
   private static final String TOKEN_PREFIX = "Bearer ";
 
@@ -36,11 +35,12 @@ public class JwtService {
   }
 
   private Claims extractAllClaims(String token) {
-    Claims claims = Jwts.parserBuilder()
-        .setSigningKey(pemReader.getPublicKey())
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
+    Claims claims = Jwts
+      .parserBuilder()
+      .setSigningKey(pemReader.getPublicKey())
+      .build()
+      .parseClaimsJws(token)
+      .getBody();
     log.info("Claims: {}", claims);
     return claims;
   }
@@ -79,13 +79,14 @@ public class JwtService {
     claims.put("roles", userDetails.getAuthorities().toString());
     claims.putAll(extraClaims); // Agregar campos adicionales
 
-    return Jwts.builder()
-        .setHeaderParam("typ", "JWT")
-        .setClaims(claims)
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
-        .signWith(pemReader.getPrivateKey(), SignatureAlgorithm.RS512)
-        .compact();
+    return Jwts
+      .builder()
+      .setHeaderParam("typ", "JWT")
+      .setClaims(claims)
+      .setIssuedAt(new Date(System.currentTimeMillis()))
+      .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
+      .signWith(pemReader.getPrivateKey(), SignatureAlgorithm.RS512)
+      .compact();
   }
 
   public boolean isTokenValid(String token, UserDetails userDetails) {
