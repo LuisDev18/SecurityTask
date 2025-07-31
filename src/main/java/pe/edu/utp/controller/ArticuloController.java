@@ -1,6 +1,7 @@
 package pe.edu.utp.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,7 +57,7 @@ public class ArticuloController {
   }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<ApiResponse<ArticuloResponseDto>> findById(@PathVariable("id") int id) {
+  public ResponseEntity<ApiResponse<ArticuloResponseDto>> findById(@PathVariable("id") Integer id) {
     log.info("Obteniendo articulo con ID: {}", id);
     var response = articuloService.findById(id);
     return ApiResponse.ok(response).toResponseEntity();
@@ -69,13 +71,20 @@ public class ArticuloController {
 
   @PutMapping(value = "/{id}")
   public ResponseEntity<Articulo> update(
-      @PathVariable("id") int id, @Valid @RequestBody ArticuloDto articuloDto) {
+      @PathVariable("id") Integer id, @Valid @RequestBody ArticuloDto articuloDto) {
     Articulo articuloUpdate = articuloService.update(articuloDto, id);
     return ResponseEntity.ok(articuloUpdate);
   }
 
+  @PatchMapping(value = "/{id}")
+  public ResponseEntity<ApiResponse<Articulo>> partialUpdate(@PathVariable("id") Integer id, @RequestBody Map<String, Object> fields) {
+    var articuloUpdate = articuloService.partialUpdate(id, fields);
+    return ApiResponse.ok(articuloUpdate).toResponseEntity();
+  }
+
+
   @DeleteMapping(value = "/{id}")
-  public ResponseEntity<ArticuloDto> delete(@PathVariable("id") int id)
+  public ResponseEntity<ArticuloDto> delete(@PathVariable("id") Integer id)
       throws NoDataFoundException {
     articuloService.delete(id);
     return ResponseEntity.ok(null);
