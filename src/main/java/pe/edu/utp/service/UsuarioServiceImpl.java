@@ -54,8 +54,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioRepository.findByEmail(usuario.getEmail()).orElseThrow(
                 () -> new EmailAlreadyException("El email: %s ya esta registrado".formatted(usuario.getEmail())));
 
-        Usuario registro = usuarioRepository.findById(id).orElseThrow(
-                () -> new NoDataFoundException("No existe el registro con el id: %d".formatted(id)));
+        Usuario registro = findById(id);
         registro.setRol(Rol.valueOf(usuario.getRol()));
         registro.setEmail(usuario.getEmail());
         registro.setPassword(encoder.encode(usuario.getPassword()));
