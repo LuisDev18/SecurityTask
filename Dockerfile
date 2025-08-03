@@ -1,7 +1,7 @@
-FROM eclipse-temurin:17
+FROM eclipse-temurin:21
 
 RUN apt-get update && apt-get -y install \
-    openjdk-17-jdk \
+    openjdk-21-jdk \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
