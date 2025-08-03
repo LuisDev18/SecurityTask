@@ -80,7 +80,7 @@ public class ArticuloController {
     @PathVariable("id") Integer id,
     @Valid @RequestBody ArticuloDto articuloDto
   ) {
-    log.info("Article update object: {}",ConvertUtil.jsonAsString(articuloDto));
+    log.info("Article update object: {}", ConvertUtil.jsonAsString(articuloDto));
     Articulo articuloUpdate = articuloService.update(articuloDto, id);
     return ResponseEntity.ok(articuloUpdate);
   }
