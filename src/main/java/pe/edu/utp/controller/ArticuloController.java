@@ -26,6 +26,7 @@ import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.exception.NoDataFoundException;
 import pe.edu.utp.service.ArticuloService;
 import pe.edu.utp.util.ApiResponse;
+import pe.edu.utp.util.ConvertUtil;
 
 @RestController
 @RequestMapping("/articulos")
@@ -79,6 +80,7 @@ public class ArticuloController {
     @PathVariable("id") Integer id,
     @Valid @RequestBody ArticuloDto articuloDto
   ) {
+    log.info("Article update object: {}",ConvertUtil.jsonAsString(articuloDto));
     Articulo articuloUpdate = articuloService.update(articuloDto, id);
     return ResponseEntity.ok(articuloUpdate);
   }
