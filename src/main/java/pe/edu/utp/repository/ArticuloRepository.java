@@ -2,9 +2,11 @@ package pe.edu.utp.repository;
 
 import java.util.List;
 
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,15 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Integer> {
            AND (:precioMin IS NULL OR a.precio >= :precioMin)
            AND (:precioMax IS NULL OR a.precio <= :precioMax)
            """
+  )
+  @QueryHints(
+    {
+      @QueryHint(name = "org.hibernate.readOnly", value = "true"),
+      @QueryHint(name = "org.hibernate.fetchSize", value = "50"),
+      @QueryHint(name = "org.hibernate.cacheable", value = "true"),
+      @QueryHint(name = "jakarta.persistence.cache.retrieveMode", value = "USE"),
+      @QueryHint(name = "jakarta.persistence.cache.storeMode", value = "USE"),
+    }
   )
   List<Articulo> findByCategoriaAndMarcaAndPrecioBetween(
     @Param("categoria") String categoria,

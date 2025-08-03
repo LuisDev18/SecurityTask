@@ -2,7 +2,6 @@ package pe.edu.utp.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,9 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-  @Value("${spring.security.disabled:false}")
-  private boolean disabledSecurity;
 
   /*
    * Sprign security detecta un bean UserDetailsService y un PasswordEncoder,
