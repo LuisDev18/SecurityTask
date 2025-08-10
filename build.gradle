@@ -5,6 +5,12 @@ plugins {
 	id 'com.diffplug.spotless' version '7.1.0'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 group = 'pe.edu.utp'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '21'
