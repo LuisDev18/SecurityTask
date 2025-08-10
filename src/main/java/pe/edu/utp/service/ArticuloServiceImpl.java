@@ -17,6 +17,7 @@ import pe.edu.utp.dto.ArticuloResponseDto;
 import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.exception.NoDataFoundException;
 import pe.edu.utp.repository.ArticuloRepository;
+import pe.edu.utp.repository.UsuarioRepository;
 
 @Service
 @Slf4j
@@ -26,6 +27,7 @@ public class ArticuloServiceImpl implements ArticuloService {
   private final ArticuloRepository articuloRepository;
   private final ArticuloConverter articuloConverter;
   private final ArticuloResponseConverter articuloResponseConverter;
+  private final UsuarioRepository usuarioRepository;
 
   @Override
   public List<ArticuloResponseDto> findAll(Pageable page) {
@@ -41,7 +43,7 @@ public class ArticuloServiceImpl implements ArticuloService {
     Double precioMax,
     Pageable pageable
   ) {
-    var result = articuloResponseConverter.fromEntity(
+    return articuloResponseConverter.fromEntity(
       articuloRepository.findByCategoriaAndMarcaAndPrecioBetween(
         categoria,
         marca,
@@ -50,7 +52,6 @@ public class ArticuloServiceImpl implements ArticuloService {
         pageable
       )
     );
-    return result;
   }
 
   @Override
@@ -60,8 +61,10 @@ public class ArticuloServiceImpl implements ArticuloService {
   }
 
   @Override
-  public Articulo save(ArticuloDto articulo) {
+  public Articulo save(ArticuloDto articulo, String email) {
+    var user = usuarioRepository.findByEmail(email);
     var entity = articuloConverter.fromDto(articulo);
+    entity.setUsuario(user.get());
     return articuloRepository.save(entity);
   }
 
@@ -96,5 +99,16 @@ public class ArticuloServiceImpl implements ArticuloService {
       ReflectionUtils.setField(field, articuloDb, value);
     });
     return articuloRepository.save(articuloDb);
+  }
+
+  @Override
+  public Articulo discountStoock(Integer id, Integer stook) {
+    articuloRepository.updateStook(id, stook);
+    return findByArticleId(id);
+  }
+
+  @Override
+  public Double calculateTotalPrice(Integer productId) {
+    return articuloRepository.getTotalPrice(productId);
   }
 }

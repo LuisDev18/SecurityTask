@@ -1,0 +1,12 @@
+DELIMITER $$
+CREATE FUNCTION get_total_price(productId INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+  DECLARE total DECIMAL(10,2);
+  SELECT SUM(precio*stock) INTO total FROM articulos
+  WHERE id = productId;
+  RETURN total;
+END$$
+DELIMITER ;

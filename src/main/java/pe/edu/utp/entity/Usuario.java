@@ -45,6 +45,8 @@ public class Usuario implements UserDetails {
   @Column(name = "rol", length = 20, nullable = false)
   private Rol rol;
 
+  private String country;
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<SimpleGrantedAuthority> authorities = new ArrayList<>();

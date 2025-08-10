@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -39,4 +40,10 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Integer> {
     @Param("precioMax") Double precioMax,
     Pageable pageable
   );
+
+  @Procedure(name = "updateStockProcedure")
+  void updateStook(@Param("productId") Integer productId, @Param("quantity") Integer quantity);
+
+  @Query(value = "Select get_total_price(:productId)", nativeQuery = true)
+  Double getTotalPrice(Integer productId);
 }

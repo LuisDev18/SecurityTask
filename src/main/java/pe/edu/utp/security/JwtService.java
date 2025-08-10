@@ -25,16 +25,17 @@ public class JwtService {
   private static final String TOKEN_HEADER = "Authorization";
   private static final String TOKEN_PREFIX = "Bearer ";
 
-  public String extractUsername(String token) {
-    return extractClaim(token, claims -> claims.get("username", String.class));
+  public String extractUsername(String tokenOrHeader) {
+    return extractClaim(tokenOrHeader, claims -> claims.get("username", String.class));
   }
 
-  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
+  public <T> T extractClaim(String tokenOrHeader, Function<Claims, T> claimsResolver) {
+    final Claims claims = extractAllClaims(tokenOrHeader);
     return claimsResolver.apply(claims);
   }
 
-  private Claims extractAllClaims(String token) {
+  private Claims extractAllClaims(String tokenOrHeader) {
+    String token = sanitizeToken(tokenOrHeader);
     Claims claims = Jwts
       .parserBuilder()
       .setSigningKey(pemReader.getPublicKey())
@@ -45,6 +46,25 @@ public class JwtService {
     return claims;
   }
 
+  // Quita "Bearer " (con espacio) usando substring y maneja espacios extra
+  private String sanitizeToken(String tokenOrHeader) {
+    if (tokenOrHeader == null) {
+      throw new IllegalArgumentException("JWT no puede ser null");
+    }
+    String t = tokenOrHeader.trim();
+    // Case-insensitive por si viene "bearer ..."
+    if (
+      t.length() >= TOKEN_PREFIX.length() &&
+      t.regionMatches(true, 0, TOKEN_PREFIX, 0, TOKEN_PREFIX.length())
+    ) {
+      t = t.substring(TOKEN_PREFIX.length()).trim();
+    }
+    if (t.isEmpty()) {
+      throw new IllegalArgumentException("JWT está vacío después de quitar el prefijo Bearer");
+    }
+    return t;
+  }
+
   public String generateToken(UserDetails userDetails) {
     return generateToken(new HashMap<>(), userDetails);
   }
@@ -52,7 +72,7 @@ public class JwtService {
   public String extractToken(HttpServletRequest request) {
     String bearerToken = request.getHeader(TOKEN_HEADER);
     if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-      return bearerToken.substring(TOKEN_PREFIX.length());
+      return bearerToken.substring(TOKEN_PREFIX.length()).trim();
     }
     return null;
   }
@@ -77,7 +97,7 @@ public class JwtService {
     Claims claims = Jwts.claims();
     claims.put("username", userDetails.getUsername());
     claims.put("roles", userDetails.getAuthorities().toString());
-    claims.putAll(extraClaims); // Agregar campos adicionales
+    claims.putAll(extraClaims);
 
     return Jwts
       .builder()
@@ -89,20 +109,20 @@ public class JwtService {
       .compact();
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+  public boolean isTokenValid(String tokenOrHeader, UserDetails userDetails) {
+    final String username = extractUsername(tokenOrHeader);
+    return (username.equals(userDetails.getUsername())) && !isTokenExpired(tokenOrHeader);
   }
 
   public boolean validateClaims(Claims claims) {
     return claims.getExpiration().after(new Date());
   }
 
-  private boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
+  private boolean isTokenExpired(String tokenOrHeader) {
+    return extractExpiration(tokenOrHeader).before(new Date());
   }
 
-  private Date extractExpiration(String token) {
-    return extractClaim(token, Claims::getExpiration);
+  private Date extractExpiration(String tokenOrHeader) {
+    return extractClaim(tokenOrHeader, Claims::getExpiration);
   }
 }

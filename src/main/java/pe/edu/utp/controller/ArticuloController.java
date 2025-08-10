@@ -3,6 +3,7 @@ package pe.edu.utp.controller;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,7 @@ import pe.edu.utp.dto.ArticuloDto;
 import pe.edu.utp.dto.ArticuloResponseDto;
 import pe.edu.utp.entity.Articulo;
 import pe.edu.utp.exception.NoDataFoundException;
+import pe.edu.utp.security.JwtService;
 import pe.edu.utp.service.ArticuloService;
 import pe.edu.utp.util.ApiResponse;
 import pe.edu.utp.util.ConvertUtil;
@@ -35,6 +38,7 @@ import pe.edu.utp.util.ConvertUtil;
 public class ArticuloController {
 
   private final ArticuloService articuloService;
+  private final JwtService jwtService;
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<ArticuloResponseDto>>> getAll(
@@ -70,8 +74,12 @@ public class ArticuloController {
   }
 
   @PostMapping
-  public ResponseEntity<ApiResponse<Articulo>> create(@Valid @RequestBody ArticuloDto articuloDto) {
-    Articulo registro = articuloService.save(articuloDto);
+  public ResponseEntity<ApiResponse<Articulo>> create(
+    @Valid @RequestBody ArticuloDto articuloDto,
+    @Parameter(hidden = true) @RequestHeader(value = "Authorization") String bearerToken
+  ) {
+    var email = jwtService.extractUsername(bearerToken);
+    Articulo registro = articuloService.save(articuloDto, email);
     return ApiResponse.created("Articulo creado exitosamente", registro).toResponseEntity();
   }
 
@@ -99,5 +107,19 @@ public class ArticuloController {
     throws NoDataFoundException {
     articuloService.delete(id);
     return ResponseEntity.ok(null);
+  }
+
+  @PutMapping(value = "/new-stock/{productId}")
+  public ResponseEntity<Articulo> updateStokSp(
+    @PathVariable("productId") Integer productId,
+    @RequestParam Integer quantity
+  ) {
+    var articuloUpdate = articuloService.discountStoock(productId, quantity);
+    return ResponseEntity.ok(articuloUpdate);
+  }
+
+  @GetMapping("/total-price/{productId}")
+  public Double getTotalPrice(@PathVariable("productId") Integer productId) {
+    return articuloService.calculateTotalPrice(productId);
   }
 }

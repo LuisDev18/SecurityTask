@@ -8,6 +8,11 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedStoredProcedureQuery;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureParameter;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -20,6 +25,14 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@NamedStoredProcedureQuery(
+  name = "updateStockProcedure",
+  procedureName = "update_stock",
+  parameters = {
+    @StoredProcedureParameter(mode = ParameterMode.IN, name = "productId", type = Integer.class),
+    @StoredProcedureParameter(mode = ParameterMode.IN, name = "quantity", type = Integer.class),
+  }
+)
 @Entity
 @Table(name = "articulos")
 @Getter
@@ -44,6 +57,10 @@ public class Articulo {
   private String categoria;
 
   private Integer stock;
+
+  @ManyToOne
+  @JoinColumn(name = "usuario_id")
+  private Usuario usuario;
 
   @Column(name = "create_at", nullable = false, updatable = false)
   @Temporal(TemporalType.TIMESTAMP)
