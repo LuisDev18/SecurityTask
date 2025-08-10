@@ -5,6 +5,7 @@ phases:
     commands:
       - chmod +x ./gradlew
       - echo Running Gradle build...
+      - ./gradlew clean build -x test
       - ./gradlew clean build
 
       - echo Logging in to Amazon ECR...
