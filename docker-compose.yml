@@ -13,7 +13,7 @@ services:
       - DATASOURCE_USERNAME=root
       - DATASOURCE_PASSWORD=admin
     env_file:
-      - .env.keypair
+      - .env.development
     depends_on:
         - mysqldb
 

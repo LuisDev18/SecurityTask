@@ -19,8 +19,10 @@ public interface ArticuloService {
     Pageable pageable
   );
   ArticuloResponseDto findById(Integer id);
-  Articulo save(ArticuloDto articulo);
+  Articulo save(ArticuloDto articulo, String email);
   Articulo update(ArticuloDto articulo, Integer id);
   Articulo partialUpdate(Integer id, Map<String, Object> fields);
   void delete(Integer id);
+  Articulo discountStoock(Integer id, Integer stook);
+  Double calculateTotalPrice(Integer productId);
 }
