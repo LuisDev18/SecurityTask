@@ -3,6 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - chmod +x ./gradlew
       - echo Running Gradle build...
       - ./gradlew clean build
 
