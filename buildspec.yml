@@ -23,7 +23,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build --build-arg APP_VERSION=$IMAGE_TAG -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker build --build-arg APP_VERSION=$IMAGE_TAG -t $REPOSITORY_URI:$IMAGE_TAG --load .
   post_build:
     commands:
       - echo Build completed on `date`
@@ -40,4 +40,4 @@ artifacts:
   files:
     - imagedefinitions.json
     # The path to your JAR file needs to be updated for Gradle.
-    - build/libs/articulosapi.jar
+    - build/libs/*.jar
