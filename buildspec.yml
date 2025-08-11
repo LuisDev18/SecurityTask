@@ -5,9 +5,7 @@ phases:
     commands:
       - chmod +x ./gradlew
       - echo Running Gradle build...
-      - ./gradlew clean build -x test
       - ./gradlew clean build
-
       - echo Logging in to Amazon ECR...
       - aws --version
       - REPOSITORY_URI=235763262026.dkr.ecr.us-east-1.amazonaws.com/palcos-images-repository
