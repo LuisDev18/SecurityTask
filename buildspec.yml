@@ -12,6 +12,13 @@ phases:
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      # Autenticación en Docker Hub usando Secrets Manager (PASO NUEVO)
+      - echo "Logging in to Docker Hub using credentials from Secrets Manager..."
+      - DOCKER_HUB_CREDENTIALS=$(aws secretsmanager get-secret-value --secret-id login-dockerhub --query SecretString --output text)
+      - DOCKER_HUB_USERNAME=$(echo $DOCKER_HUB_CREDENTIALS | jq -r '.username')
+      - DOCKER_HUB_PASSWORD=$(echo $DOCKER_HUB_CREDENTIALS | jq -r '.password')
+      - echo $DOCKER_HUB_PASSWORD | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+      - echo "Login to Docker Hub successful."
   build:
     commands:
       - echo Build started on `date`
