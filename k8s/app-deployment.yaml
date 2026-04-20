@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          # Este comando intenta abrir una conexión TCP al puerto 3306 de db-service
+          command: [ 'sh', '-c', "until nc -zv db-service 3306; do echo 'Esperando a la base de datos...'; sleep 2; done;" ]
+      containers:
+        - name: app-container
+          image: speedboxijr/articulosapi:v2
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+          env:
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-password
+            - name: DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: db-user
+            # Nuevo Secret para JWT
+            - name: JWT_RS512_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secrets
+                  key: JWT_RS512_PRIVATE_KEY
+            - name: JWT_RS512_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secrets
+                  key: JWT_RS512_PUBLIC_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  type: LoadBalancer # Para poder acceder desde afuera (en la nube) o NodePort
+  selector:
+    app: springboot-app
+  ports:
+    - port: 80
+      targetPort: 8080
