@@ -75,6 +75,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     user.setPassword(encoder.encode(usuario.getPassword()));
     user.setEmail(usuario.getEmail());
     user.setRol(Rol.valueOf(usuario.getRol()));
+    user.setActivo(true);
     var result = usuarioRepository.save(user);
     return result;
   }

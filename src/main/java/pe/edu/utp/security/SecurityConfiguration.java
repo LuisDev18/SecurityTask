@@ -51,6 +51,8 @@ public class SecurityConfiguration {
           "/actuator/health",
           "/usuarios-register",
           "/usuarios/login",
+          "/auth/otp/generate",
+          "/auth/otp/validate",
           "/signup/**",
           "/v3/**",
           "/doc/swagger-ui/**"
